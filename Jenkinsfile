@@ -1,22 +1,17 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'  // Jenkins credentials ID
-        IMAGE_NAME = 'ayerakhan/mlopsjenkins'
-    }
-
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'master', url: 'https://github.com/ayeraKhan/Mlops-A1.git'
+                git 'https://github.com/ayeraKhan/Mlops-A1.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat "docker build -t %IMAGE_NAME% ."
+                    docker.build('ayerakhan/ml-api')
                 }
             }
         }
@@ -24,12 +19,17 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        bat """
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                        docker push %IMAGE_NAME%
-                        """
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        docker.image('ayerakhan/ml-api').push('latest')
                     }
+                }
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                script {
+                    sh 'docker run -d -p 5000:5000 ayerakhan/ml-api'
                 }
             }
         }
