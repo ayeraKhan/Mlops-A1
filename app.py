@@ -4,8 +4,9 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Load your trained model (update with actual model file)
+# Load trained model and scaler
 model = pickle.load(open("model.pkl", "rb"))
+scaler = pickle.load(open("scaler.pkl", "rb"))
 
 @app.route("/")
 def home():
@@ -14,8 +15,14 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
-    prediction = model.predict(np.array(data["features"]).reshape(1, -1))
-    return jsonify({"prediction": prediction.tolist()})
+    features = np.array(data["features"]).reshape(1, -1)
+    
+    # Scale the input features
+    scaled_features = scaler.transform(features)
+    
+    # Make prediction
+    prediction = model.predict(scaled_features)
+    return jsonify({"prediction": int(prediction[0])})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
