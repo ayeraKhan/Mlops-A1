@@ -37,11 +37,7 @@ def predict():
     data = request.get_json()
 
     if not data or "features" not in data:
-<<<<<<< HEAD
-        return jsonify({"error": "Invalid request, 'features' key is required"}), 400
-=======
-        return jsonify({"error": "Invalid req,'features' key required"}), 400
->>>>>>> 7e0c98a (Fixed Flake8 issues)
+        return jsonify({"error": "Invalid req,features key is required"}), 400
 
     try:
         features = np.array(data["features"]).reshape(1, -1)
