@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import pickle
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
@@ -9,11 +8,12 @@ from sklearn.metrics import accuracy_score
 
 # Load dataset
 iris = load_iris()
-X = iris.data
-y = iris.target
+X, y = iris.data, iris.target
 
 # Split dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
 # Normalize the features (good practice for ML models)
 scaler = StandardScaler()
