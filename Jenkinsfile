@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'  // Jenkins credentials ID
-        IMAGE_NAME = 'ayerakhan/MlopsJenkins'
+        IMAGE_NAME = 'ayerakhan/mlopsjenkins'
     }
 
     stages {
