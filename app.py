@@ -9,19 +9,25 @@ app = Flask(__name__)
 try:
     model_path = "model.pkl"
     scaler_path = "scaler.pkl"
-    
+
     if not os.path.exists(model_path) or not os.path.exists(scaler_path):
         raise FileNotFoundError("Model or Scaler file is missing!")
-    
-    model = pickle.load(open(model_path, "rb"))
-    scaler = pickle.load(open(scaler_path, "rb"))
+
+    with open(model_path, "rb") as model_file:
+        model = pickle.load(model_file)
+
+    with open(scaler_path, "rb") as scaler_file:
+        scaler = pickle.load(scaler_file)
+
 except Exception as e:
     print(f"Error loading model: {e}")
     model, scaler = None, None
 
+
 @app.route("/")
 def home():
     return "ML Model API is Running!"
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -29,17 +35,19 @@ def predict():
         return jsonify({"error": "Model or scaler not loaded"}), 500
 
     data = request.get_json()
-    
+
     if not data or "features" not in data:
         return jsonify({"error": "Invalid request, 'features' key is required"}), 400
-    
+
     try:
         features = np.array(data["features"]).reshape(1, -1)
         scaled_features = scaler.transform(features)
         prediction = model.predict(scaled_features)
         return jsonify({"prediction": int(prediction[0])})
+
     except Exception as e:
         return jsonify({"error": f"Prediction failed: {e}"}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
