@@ -32,12 +32,16 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     if not model or not scaler:
-        return jsonify({"error": "Model or scaler not loaded"}), 500
+        return jsonify({"error": "Model/scaler not loaded"}), 500
 
     data = request.get_json()
 
     if not data or "features" not in data:
+<<<<<<< HEAD
         return jsonify({"error": "Invalid request, 'features' key is required"}), 400
+=======
+        return jsonify({"error": "Invalid req,'features' key required"}), 400
+>>>>>>> 7e0c98a (Fixed Flake8 issues)
 
     try:
         features = np.array(data["features"]).reshape(1, -1)
