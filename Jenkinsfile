@@ -2,13 +2,13 @@ pipeline {
     agent any
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'  // Jenkins credentials ID
-        IMAGE_NAME = 'your-dockerhub-username/your-image-name'
+        IMAGE_NAME = 'ayerakhan/MlopsJenkins'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'master', url: 'https://github.com/your-repo.git'
+                git branch: 'master', url: 'git url: 'https://github.com/ayeraKhan/Mlops-A1.git', branch: 'master'
             }
         }
 
